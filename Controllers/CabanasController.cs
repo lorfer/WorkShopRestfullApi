@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace WorkShopRestfullApi.Controllers
         }
 
         // GET: api/Cabanas
+        [ProducesResponseType(200, Type = typeof(List<Cabana>))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cabana>>> GetCabanas()
         {
@@ -72,9 +74,14 @@ namespace WorkShopRestfullApi.Controllers
         }
 
         // POST: api/Cabanas
+       // [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ValidationProblemDetails)]
         [HttpPost]
         public async Task<ActionResult<Cabana>> PostCabana(Cabana cabana)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             _context.Cabanas.Add(cabana);
             await _context.SaveChangesAsync();
 
@@ -82,6 +89,7 @@ namespace WorkShopRestfullApi.Controllers
         }
 
         // DELETE: api/Cabanas/5
+       //[ProducesResponseType((int)HttpStatusCode.NotFound]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Cabana>> DeleteCabana(int id)
         {
